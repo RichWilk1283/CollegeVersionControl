@@ -1,0 +1,121 @@
+@page "/guest-check-in"
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<h1>Welcome to Dalkeith Guest House</h1>
+
+<p>
+    We are delighted to have you as our guest! To ensure a smooth and efficient check-in process, 
+    please fill out the form below. Your information is collected solely for the purpose of your stay 
+    and is kept strictly confidential in accordance with our data protection policies.
+</p>
+
+<hr />
+
+<EditForm Model="@guestInformation" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <h3>Guest Information</h3>
+    <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name</label>
+        <InputText id="fullName" class="form-control" @bind-Value="guestInformation.FullName" />
+        <ValidationMessage For="@(() => guestInformation.FullName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="contact" class="form-label">Contact Details</label>
+        <InputText id="contact" class="form-control" @bind-Value="guestInformation.ContactDetails" />
+        <ValidationMessage For="@(() => guestInformation.ContactDetails)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="idDetails" class="form-label">ID/Passport Details</label>
+        <InputText id="idDetails" class="form-control" @bind-Value="guestInformation.IdDetails" />
+        <ValidationMessage For="@(() => guestInformation.IdDetails)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <InputTextArea id="address" class="form-control" @bind-Value="guestInformation.Address" />
+        <ValidationMessage For="@(() => guestInformation.Address)" />
+    </div>
+
+    <h3>Stay Details</h3>
+    <div class="mb-3">
+        <label for="checkInDate" class="form-label">Check-in Date</label>
+        <InputDate id="checkInDate" class="form-control" @bind-Value="guestInformation.CheckInDate" />
+        <ValidationMessage For="@(() => guestInformation.CheckInDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="checkOutDate" class="form-label">Expected Check-out Date</label>
+        <InputDate id="checkOutDate" class="form-control" @bind-Value="guestInformation.CheckOutDate" />
+        <ValidationMessage For="@(() => guestInformation.CheckOutDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="roomNumber" class="form-label">Room Assigned</label>
+        <InputText id="roomNumber" class="form-control" @bind-Value="guestInformation.RoomAssigned" />
+        <ValidationMessage For="@(() => guestInformation.RoomAssigned)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="numberOfGuests" class="form-label">Number of Guests</label>
+        <InputNumber id="numberOfGuests" class="form-control" @bind-Value="guestInformation.NumberOfGuests" />
+        <ValidationMessage For="@(() => guestInformation.NumberOfGuests)" />
+    </div>
+
+    <h3>Payment Details</h3>
+    <div class="mb-3">
+        <label for="paymentMethod" class="form-label">Payment Method</label>
+        <InputText id="paymentMethod" class="form-control" @bind-Value="guestInformation.PaymentMethod" />
+        <ValidationMessage For="@(() => guestInformation.PaymentMethod)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private GuestInformation guestInformation = new GuestInformation();
+
+    private void HandleSubmit()
+    {
+        // Navigate to the summary page and pass the data as a query string or via state management
+        NavigationManager.NavigateTo($"/guest-sum?fullName={guestInformation.FullName}&contact={guestInformation.ContactDetails}" +
+            $"&idDetails={guestInformation.IdDetails}&address={guestInformation.Address}&checkInDate={guestInformation.CheckInDate.ToShortDateString()}" +
+            $"&checkOutDate={guestInformation.CheckOutDate.ToShortDateString()}&roomAssigned={guestInformation.RoomAssigned}" +
+            $"&numberOfGuests={guestInformation.NumberOfGuests}&paymentMethod={guestInformation.PaymentMethod}");
+    }
+
+    public class GuestInformation
+    {
+        [Required(ErrorMessage = "Full Name is required.")]
+        public string FullName { get; set; }
+
+        [Required(ErrorMessage = "Contact Details are required.")]
+        public string ContactDetails { get; set; }
+
+        [Required(ErrorMessage = "ID/Passport Details are required.")]
+        public string IdDetails { get; set; }
+
+        [Required(ErrorMessage = "Address is required.")]
+        public string Address { get; set; }
+
+        [Required(ErrorMessage = "Check-in Date is required.")]
+        public DateTime CheckInDate { get; set; }
+
+        [Required(ErrorMessage = "Expected Check-out Date is required.")]
+        public DateTime CheckOutDate { get; set; }
+
+        [Required(ErrorMessage = "Room Assigned is required.")]
+        public string RoomAssigned { get; set; }
+
+        [Required(ErrorMessage = "Number of Guests is required.")]
+        [Range(1, 20, ErrorMessage = "Number of guests must be between 1 and 20.")]
+        public int NumberOfGuests { get; set; }
+
+        [Required(ErrorMessage = "Payment Method is required.")]
+        public string PaymentMethod { get; set; }
+    }
+}

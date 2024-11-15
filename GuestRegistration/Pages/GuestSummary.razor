@@ -1,0 +1,53 @@
+@page "/guest-sum"
+@inject NavigationManager NavigationManager
+
+<h1>Summary of Your Check-In Information</h1>
+
+<p>Thank you for providing your details. Below is the information we have recorded for your check-in:</p>
+
+<ul>
+    <li><strong>Full Name:</strong> @fullName</li>
+    <li><strong>Contact Details:</strong> @contact</li>
+    <li><strong>ID/Passport Details:</strong> @idDetails</li>
+    <li><strong>Address:</strong> @address</li>
+    <li><strong>Check-in Date:</strong> @checkInDate</li>
+    <li><strong>Expected Check-out Date:</strong> @checkOutDate</li>
+    <li><strong>Room Assigned:</strong> @roomAssigned</li>
+    <li><strong>Number of Guests:</strong> @numberOfGuests</li>
+    <li><strong>Payment Method:</strong> @paymentMethod</li>
+</ul>
+
+<button class="btn btn-primary" @onclick="GoBack">Go Back</button>
+
+@code {
+    private string fullName;
+    private string contact;
+    private string idDetails;
+    private string address;
+    private string checkInDate;
+    private string checkOutDate;
+    private string roomAssigned;
+    private string numberOfGuests;
+    private string paymentMethod;
+
+    protected override void OnInitialized()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        fullName = query.Get("fullName");
+        contact = query.Get("contact");
+        idDetails = query.Get("idDetails");
+        address = query.Get("address");
+        checkInDate = query.Get("checkInDate");
+        checkOutDate = query.Get("checkOutDate");
+        roomAssigned = query.Get("roomAssigned");
+        numberOfGuests = query.Get("numberOfGuests");
+        paymentMethod = query.Get("paymentMethod");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/guest-check-in");
+    }
+}
